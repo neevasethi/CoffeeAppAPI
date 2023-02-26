@@ -1,3 +1,91 @@
 openai version: 1.0.0
 info:
   title: Submitting Order API
+  description: This is an OpenAPI for the service of submitting orders within the online coffee ordering app for CIS4930  
+  version: 1.0.0
+paths: 
+  /submitOrder:
+    get:
+      summary: Get the order summary submitted by user ID
+      parameters: 
+        - name: id
+          in: path
+          description: user ID from account login
+          required: true
+          schema:
+            type: integer
+            format: int64
+       - name: items
+         description: list of items in order
+         required: true
+         schema:
+            type: list
+            format: string
+     responses:
+          '200 OK': 
+            description: Successful recieved order summary
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/orders'
+          '404 Not Found'
+             description: Error: operation not successful and cannot locate the requested resource
+             content:
+               application/json: 
+                schema:
+                  $ref: '#/components/schemas/orders'
+              
+    post:
+      summary: Add a new order to list
+      requestBody:
+        description: a JSON object containing the order information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/order'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/orderForm'
+          text/plain:
+            schema:
+              type: list
+      responses:
+        '200 OK': 
+          description: Successful added new order to the list
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/orders/orderForm'
+        '400 Bad Request': 
+        description: New order not added to the list; the server cannot process the request due to something that is percieved to be a client error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/orders/orderForm'
+          
+    delete: 
+      summary: Removes an order from list
+      responses:
+        '200 OK': 
+          description: Successful removed an order from the list
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/orders/orders'
+        '405 Method Not Allowed': 
+          description: Order not deleted from list; The request method is known by the server but it is not supported by the target resource
+            content:
+              application/json:
+                schema: 
+                  $ref: '#/components/orders'
+        '500: Internal Server Error'
+          description: The server has encountered a situation it does not know how to handle; This may happen when DELETE is called with not items currently in the list
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/orders'
+    
