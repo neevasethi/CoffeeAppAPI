@@ -1,12 +1,12 @@
 openai version: 1.0.0
 info:
-  title: Submitting Order API
-  description: This is an OpenAPI for the service of submitting orders within the online coffee ordering app for CIS4930  
-  version: 1.0.0
+  title: Coffee Submitting Order API 
+  description: This is an OpenAPI for the service of submitting orders within the online coffee ordering app for CIS4930. These specifications are based on the UML Sequence Diagrrma for the Coffee Shop Application.  
+  version: 0.0.1
 paths: 
   /submitOrder:
     get:
-      summary: Get the order summary submitted by user ID
+      summary: Gets the order summary submitted by user ID
       parameters: 
         - name: id
           in: path
@@ -23,10 +23,12 @@ paths:
             format: string
      responses:
           '200 OK': 
-            description: Successful recieved order summary
+            description: Successful recieved order summary as a list of items
             content:
               application/json:
                 schema:
+                  type: list
+                  format: string
                   $ref: '#/components/orders'
           '404 Not Found'
              description: Error: operation not successful and cannot locate the requested resource
@@ -44,18 +46,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/order'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/order'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/orderForm'
-          text/plain:
-            schema:
-              type: list
+              type: object
+              properties: 
+                items: 
+                  type: list
+                  format: string
+                  example: {"Caramel Latte", "Mocha Latte"}
       responses:
         '200 OK': 
-          description: Successful added new order to the list
+          description: Successful added new order to the current list of orders
             content:
               application/json:
                 schema:
@@ -83,7 +82,7 @@ paths:
                 schema: 
                   $ref: '#/components/orders'
         '500: Internal Server Error'
-          description: The server has encountered a situation it does not know how to handle; This may happen when DELETE is called with not items currently in the list
+          description: The server has encountered a situation it does not know how to handle; This may happen when DELETE is called with no items currently in the list
             content:
               application/json:
                 schema:
